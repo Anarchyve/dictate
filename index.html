@@ -52,27 +52,26 @@
 
     <!-- Firebase CDN 및 JavaScript 로직 -->
     <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCUj6exQPXCZ6GrfypsVZ1JmQUF7YvHpv0",
-    authDomain: "dictate-6881b.firebaseapp.com",
-    projectId: "dictate-6881b",
-    storageBucket: "dictate-6881b.appspot.com",
-    messagingSenderId: "174868283166",
-    appId: "1:174868283166:web:800b44c9fa1d875a10930f",
-    measurementId: "G-39B9D1MWCR"
-  };
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCUj6exQPXCZ6GrfypsVZ1JmQUF7YvHpv0",
+            authDomain: "dictate-6881b.firebaseapp.com",
+            projectId: "dictate-6881b",
+            storageBucket: "dictate-6881b.appspot.com",
+            messagingSenderId: "174868283166",
+            appId: "1:174868283166:web:800b44c9fa1d875a10930f",
+            measurementId: "G-39B9D1MWCR"
+        };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app); // Initialize Firestore
 
         // 답안을 제출하는 함수
         async function submitAnswer() {
@@ -91,13 +90,11 @@
                 await addDoc(collection(db, "studentAnswers"), {
                     name: studentName,
                     answer: studentInput,
-                    submittedAt: new Date()
+                    timestamp: new Date() // Optional: to keep track of when the answer was submitted
                 });
-
                 feedback.textContent = "Your answer has been submitted successfully!";
                 feedback.style.color = "green";
-
-                // 입력 필드 초기화
+                // Clear input fields after submission
                 document.getElementById('studentName').value = '';
                 document.getElementById('studentInput').value = '';
             } catch (error) {
