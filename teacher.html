@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher's Dashboard - Student Answers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px auto;
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Teacher's Dashboard</h1>
+    <p>Here are the answers submitted by students.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Answer</th>
+                <th>Submitted At</th>
+            </tr>
+        </thead>
+        <tbody id="answersTable">
+            <!-- 학생 답안이 여기에 추가됩니다. -->
+        </tbody>
+    </table>
+
+    <!-- Firebase SDK 및 JavaScript 로직 -->
+    <script type="module">
+        // Firebase SDK 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+        // Firebase 구성
+        const firebaseConfig = {
+            apiKey: "AIzaSyCUj6exQPXCZ6GrfypsVZ1JmQUF7YvHpv0",
+            authDomain: "dictate-6881b.firebaseapp.com",
+            projectId: "dictate-6881b",
+            storageBucket: "dictate-6881b.appspot.com",
+            messagingSenderId: "174868283166",
+            appId: "1:174868283166:web:800b44c9fa1d875a10930f",
+            measurementId: "G-39B9D1MWCR"
+        };
+
+        // Firebase 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // 학생 답안을 Firestore에서 불러오는 함수
+        async function loadStudentAnswers() {
+            const answersTable = document.getElementById('answersTable');
+            const querySnapshot = await getDocs(collection(db, "studentAnswers"));
+
+            querySnapshot.forEach((doc) => {
+                const answerData = doc.data();
+                const newRow = document.createElement('tr');
+                
+                newRow.innerHTML = `
+                    <td>${answerData.name}</td>
+                    <td>${answerData.answer}</td>
+                    <td>${answerData.submittedAt.toDate().toLocaleString()}</td>
+                `;
+                answersTable.appendChild(newRow);
+            });
+        }
+
+        // 페이지 로드 시 학생 답안 불러오기
+        window.onload = loadStudentAnswers;
+    </script>
+</body>
+</html>

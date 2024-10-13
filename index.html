@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictation Activity</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input, textarea {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-size: 18px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dictation Practice</h1>
+    <p>Listen to the teacher and write the sentence below.</p>
+
+    <!-- 학생 이름 입력 필드 -->
+    <input type="text" id="studentName" placeholder="Enter your name">
+    
+    <!-- 받아쓰기 문장 입력 필드 -->
+    <textarea id="studentInput" placeholder="Type the sentence here..."></textarea>
+    
+    <br>
+    <button onclick="submitAnswer()">Submit</button>
+
+    <div class="feedback" id="feedback"></div>
+
+    <!-- Firebase CDN 및 JavaScript 로직 -->
+    <script type="module">
+        // Firebase SDK 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+        // Firebase 구성
+        const firebaseConfig = {
+            apiKey: "AIzaSyCUj6exQPXCZ6GrfypsVZ1JmQUF7YvHpv0",
+            authDomain: "dictate-6881b.firebaseapp.com",
+            projectId: "dictate-6881b",
+            storageBucket: "dictate-6881b.appspot.com",
+            messagingSenderId: "174868283166",
+            appId: "1:174868283166:web:800b44c9fa1d875a10930f",
+            measurementId: "G-39B9D1MWCR"
+        };
+
+        // Firebase 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // 답안을 제출하는 함수
+        async function submitAnswer() {
+            const studentName = document.getElementById('studentName').value.trim();
+            const studentInput = document.getElementById('studentInput').value.trim();
+            const feedback = document.getElementById('feedback');
+
+            if (studentName === "" || studentInput === "") {
+                feedback.textContent = "Please enter both your name and the answer.";
+                feedback.style.color = "red";
+                return;
+            }
+
+            try {
+                // Firestore에 답안 저장
+                await addDoc(collection(db, "studentAnswers"), {
+                    name: studentName,
+                    answer: studentInput,
+                    submittedAt: new Date()
+                });
+
+                feedback.textContent = "Your answer has been submitted successfully!";
+                feedback.style.color = "green";
+
+                // 입력 필드 초기화
+                document.getElementById('studentName').value = '';
+                document.getElementById('studentInput').value = '';
+            } catch (error) {
+                feedback.textContent = "Error submitting your answer. Please try again.";
+                feedback.style.color = "red";
+                console.error("Error adding document: ", error);
+            }
+        }
+    </script>
+</body>
+</html>
