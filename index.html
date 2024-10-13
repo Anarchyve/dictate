@@ -52,47 +52,11 @@
 
     <!-- Firebase CDN 및 JavaScript 로직 -->
     <script>
-
-        // 답안을 제출하는 함수
-        async function submitAnswer() {
-            const studentName = document.getElementById('studentName').value.trim();
-            const studentInput = document.getElementById('studentInput').value.trim();
-            const feedback = document.getElementById('feedback');
-
-            if (studentName === "" || studentInput === "") {
-                feedback.textContent = "Please enter both your name and the answer.";
-                feedback.style.color = "red";
-                return;
-            }
-
-            try {
-                // Firestore에 답안 저장
-                await addDoc(collection(db, "studentAnswers"), {
-                    name: studentName,
-                    answer: studentInput,
-                    timestamp: new Date() // Optional: to keep track of when the answer was submitted
-                });
-                feedback.textContent = "Your answer has been submitted successfully!";
-                feedback.style.color = "green";
-                // Clear input fields after submission
-                document.getElementById('studentName').value = '';
-                document.getElementById('studentInput').value = '';
-            } catch (error) {
-                feedback.textContent = "Error submitting your answer. Please try again.";
-                feedback.style.color = "red";
-                console.error("Error adding document: ", error);
-            }
-        }
-        </script>
-
-     <script type="module">
-
-         // Import the functions you need from the SDKs you need
-         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        // Firebase SDK 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
 
-        // Your web app's Firebase configuration
+        // Firebase 구성
         const firebaseConfig = {
             apiKey: "AIzaSyCUj6exQPXCZ6GrfypsVZ1JmQUF7YvHpv0",
             authDomain: "dictate-6881b.firebaseapp.com",
@@ -103,10 +67,37 @@
             measurementId: "G-39B9D1MWCR"
         };
 
-        // Initialize Firebase
+        // Firebase 초기화
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getFirestore(app); // Initialize Firestore
+        const db = getFirestore(app);
+
+        // 답안을 제출하는 함수
+        async function submitAnswer() {
+            const studentName = document.getElementById('studentName').value.trim();
+            const studentInput = document.getElementById('studentInput').value.trim();
+            const feedback = document.getElementById('feedback');
+
+            if (studentName === "" || studentInput === "") {
+                feedback.textContent = "이름과 답안을 모두 입력하세요.";
+                return;
+            }
+
+            try {
+                // Firestore에 학생의 입력을 저장
+                const docRef = await addDoc(collection(db, "studentAnswers"), {
+                    name: studentName,
+                    answer: studentInput,
+                    timestamp: new Date()
+                });
+
+                feedback.textContent = "답안이 제출되었습니다!";
+                document.getElementById('studentInput').value = ""; // 입력 필드 비우기
+                document.getElementById('studentName').value = ""; // 이름 필드 비우기
+            } catch (e) {
+                feedback.textContent = "답안 제출 중 오류가 발생했습니다.";
+                console.error("Error adding document: ", e);
+            }
+        }
     </script>
 </body>
 </html>
