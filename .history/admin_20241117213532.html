@@ -3,15 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>학생 페이지</title>
+    <title>관리자 페이지</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header class="header">
-        <h1>🌟 Today's Sentence</h1>
+        <h1>🔧 Manage Sentences</h1>
     </header>
     <main class="content">
-        <p id="daily-sentence" class="sentence">Loading today's sentence...</p>
+        <form id="sentence-form">
+            <input
+                type="text"
+                id="sentence-input"
+                placeholder="Type a new sentence"
+                required
+            />
+            <button type="submit">Add Sentence</button>
+        </form>
+        <ul id="sentence-list"></ul>
     </main>
     <footer class="footer">
         <p>&copy; 2024 Good Sentences Tracker</p>
@@ -23,9 +32,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
 
     <!-- Firebase 설정 -->
-    <script src="firebase-config.js"></script>
+    <script src="js/firebase-config.js"></script>
 
-    <!-- 앱 로직 -->
-    <script src="app.js"></script>
+    <!-- 관리자 로직 -->
+    <script src="js/admin.js"></script>
 </body>
 </html>
