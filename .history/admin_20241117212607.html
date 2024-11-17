@@ -3,19 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Today's Sentence</title>
+  <title>Sentence Manager</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://www.gstatic.com/firebasejs/9.16.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.16.0/firebase-firestore.js"></script>
-  <script src="firebase-config.js"></script>
-  <script defer src="app.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script defer src="js/admin.js"></script>
 </head>
 <body>
   <header class="header">
-    <h1>🌟 Good Sentence of the Day</h1>
+    <h1>🔧 Manage Sentences</h1>
   </header>
   <main class="content">
-    <p id="daily-sentence" class="sentence">Loading today's sentence...</p>
+    <form id="sentence-form">
+      <input
+        type="text"
+        id="sentence-input"
+        placeholder="Type a new sentence"
+        required
+      />
+      <button type="submit">Add Sentence</button>
+    </form>
+    <ul id="sentence-list"></ul>
   </main>
   <footer class="footer">
     <p>&copy; 2024 Good Sentences Tracker</p>
